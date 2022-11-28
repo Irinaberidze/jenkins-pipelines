@@ -6,10 +6,20 @@ kind: Pod
 metadata:
   name: podman
 spec:
+  volumes:
+  - name: containerd-path
+    hostPath:
+      path: /tmp/csivvv
   containers:
   - image: ikambarov/podman
     name: ${podName}
+    volumeMounts:
+    - name: containerd-path
+      mountPath: /var/lib/containers
+    securityContext:
+      privileged: true
 """
+
 podTemplate(name: podName, label: podName, showRawYaml: false, yaml: template) {
     node(podName){
         container(podName){
