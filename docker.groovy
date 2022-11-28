@@ -11,8 +11,11 @@ spec:
     hostPath:
       path: /tmp/csivvv
   containers:
-  - image: ikambarov/podman
+  - image: quay.io/podman/stable
     name: ${podName}
+    args:
+    - sleep
+    - "100000"
     volumeMounts:
     - name: containerd-path
       mountPath: /var/lib/containers
