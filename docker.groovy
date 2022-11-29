@@ -30,13 +30,18 @@ podTemplate(name: podName, label: podName, showRawYaml: false, yaml: template) {
                 git 'https://github.com/ikambarov/Flaskex-docker.git'
             }
 
-            stage("Build"){
-                sh "podman build -t ikambarov/flaskex ."
-            }
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKERHUB_PASS', usernameVariable: 'DOCKERHUB_USER')]) {
+                stage("Build"){
+                    sh 'podman build -t $DOCKERHUB_USER/flaskex .'
+                }
 
-            stage("Get Images"){
-                sh "podman images"
-            }
+                stage("Push to Dockerhub"){
+                    sh '''
+                        podman login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS
+                        podman push $DOCKERHUB_USER/flaskex
+                    '''
+                }
+            }            
         }
     }    
 }
