@@ -38,10 +38,10 @@ podTemplate(name: podName, label: podName, showRawYaml: false, yaml: template) {
                 stage("Push to Dockerhub"){
                     sh '''
                         podman login -u $DOCKERHUB_USER -p $DOCKERHUB_PASS
-                        podman push $DOCKERHUB_USER/flaskex
+                        podman push docker://docker.io/$DOCKERHUB_USER/flaskex
                     '''
                 }
-            }            
+            } 
         }
     }    
 }
